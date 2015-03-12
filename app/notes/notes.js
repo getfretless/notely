@@ -17,4 +17,8 @@ angular.module('myApp.notes', ['ngRoute'])
   .success(function(notes_data) {
     $scope.notes = notes_data;
   });
+
+  $scope.commit = function() {
+    console.log('I have submitted the form');
+  };
 }]);
