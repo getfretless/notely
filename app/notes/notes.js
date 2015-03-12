@@ -16,15 +16,14 @@ angular.module('myApp.notes', ['ngRoute'])
 
   NotesBackend.fetchNotes();
 
+  $scope.note = {};
+
   $scope.notes = function() {
     return NotesBackend.getNotes();
   };
 
   $scope.commit = function() {
-    NotesBackend.postNote({
-      title: $scope.noteTitle,
-      body_html: $scope.noteBody
-    });
+    NotesBackend.postNote($scope.note);
   };
 
 }])
