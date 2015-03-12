@@ -3,22 +3,54 @@
 var notelyBasePath = 'https://elevennote-nov-2014.herokuapp.com/api/v1/';
 var apiKey = '$2a$10$Z96eCeXE/kPt/l1Yuvg5xuJr1MArnxV33yJ2z0hjBcVZZCiJtHwZa';
 
-angular.module('myApp.notes', ['ngRoute'])
+var noteApp = angular.module('myApp.notes', ['ngRoute']);
 
-.config(['$routeProvider', function($routeProvider) {
+noteApp.config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/notes', {
     templateUrl: 'notes/notes.html',
     controller: 'NotesController'
   });
-}])
+}]);
 
-.controller('NotesController', ['$http', '$scope', function($http, $scope) {
-  $http.get(notelyBasePath + 'notes.json?api_key=' + apiKey)
-  .success(function(notes_data) {
-    $scope.notes = notes_data;
-  });
+noteApp.controller('NotesController', ['$scope', 'NotesBackend', function($scope, NotesBackend) {
+
+  NotesBackend.fetchNotes();
+
+  $scope.notes = function() {
+    return NotesBackend.getNotes();
+  };
 
   $scope.commit = function() {
-    console.log('I have submitted the form');
+    NotesBackend.postNote({
+      title: $scope.noteTitle,
+      body_html: $scope.noteBody
+    });
   };
+
+}]);
+
+noteApp.service('NotesBackend', ['$http', function($http){
+
+  var notes = [];
+
+  this.getNotes = function() {
+    return notes;
+  };
+
+  this.fetchNotes = function() {
+    $http.get(notelyBasePath + 'notes.json?api_key=' + apiKey)
+    .success(function(notes_data) {
+      notes = notes_data;
+    });
+  };
+
+  this.postNote = function(noteData) {
+    $http.post(notelyBasePath + 'notes', {
+      api_key: apiKey,
+      note: noteData
+    }).success(function(newNoteData) {
+      notes.push(newNoteData);
+    });
+  }
+
 }]);
