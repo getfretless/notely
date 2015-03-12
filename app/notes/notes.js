@@ -28,12 +28,14 @@ angular.module('myApp.notes', ['ngRoute'])
     return (note && note.id) ? 'Update Note' : 'Create Note';
   };
 
-  $scope.commit = function() {
+  $scope.saveNote = function() {
     if ($scope.note.id) {
       NotesBackend.updateNote($scope.note);
     }
     else {
       NotesBackend.postNote($scope.note);
+      // TODO: keep note and set $scope.note to the persisted object
+      $scope.note = {};
     }
   };
 
@@ -48,6 +50,10 @@ angular.module('myApp.notes', ['ngRoute'])
         return notes[i];
       }
     }
+  };
+
+  $scope.clearNote = function() {
+    $scope.note = {};
   };
 
 }])
