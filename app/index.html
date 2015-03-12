@@ -17,7 +17,7 @@
   <link rel="stylesheet" href="app.css">
   <script src="bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>
 </head>
-<body>
+<body ng-controller="NotesController">
 
   <div class="container wrap">
     <div class="row">
@@ -33,6 +33,11 @@
           <nav id="sidebar">
             <div class="well">
               SIDEBAR
+              <ul>
+                <li ng-repeat="note in notes">
+                  {{ note.title }}
+                </li>
+              </ul>
             </div>
           </nav>
         </div>
@@ -56,7 +61,7 @@
   <script src="view2/view2.js"></script>
 
   <script src="notes/notes.js"></script>
-  
+
   <script src="components/version/version.js"></script>
   <script src="components/version/version-directive.js"></script>
   <script src="components/version/interpolate-filter.js"></script>
