@@ -16,8 +16,6 @@ angular.module('myApp.notes', ['ngRoute'])
 
   NotesBackend.fetchNotes();
 
-  $scope.note = {};
-
   $scope.notes = function() {
     return NotesBackend.getNotes();
   };
@@ -28,6 +26,19 @@ angular.module('myApp.notes', ['ngRoute'])
 
   $scope.commit = function() {
     NotesBackend.postNote($scope.note);
+  };
+
+  $scope.loadNote = function(note) {
+    $scope.note = note;
+  }
+
+  $scope.findNoteById = function(noteId) {
+    var notes = $scope.notes();
+    for (var i=0; i < notes.length; i++) {
+      if (notes[i].id === noteId) {
+        return notes[i];
+      }
+    }
   };
 
 }])
