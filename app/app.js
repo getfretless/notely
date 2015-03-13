@@ -39,10 +39,12 @@ service('NotesBackend', ['$http', '$cookies', function($http, $cookies){
   };
 
   this.fetchNotes = function() {
-    $http.get(notelyBasePath + 'notes.json?api_key=' + user.api_key)
-    .success(function(notes_data) {
-      notes = notes_data;
-    });
+    if (user.api_key) {
+      $http.get(notelyBasePath + 'notes.json?api_key=' + user.api_key)
+      .success(function(notes_data) {
+        notes = notes_data;
+      });
+    }
   };
 
   this.postNote = function(noteData, callback) {
