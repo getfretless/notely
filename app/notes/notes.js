@@ -1,8 +1,5 @@
 'use strict';
 
-var notelyBasePath = 'https://elevennote-nov-2014.herokuapp.com/api/v1/';
-var apiKey = '$2a$10$Z96eCeXE/kPt/l1Yuvg5xuJr1MArnxV33yJ2z0hjBcVZZCiJtHwZa';
-
 angular.module('myApp.notes', ['ngRoute', 'textAngular'])
 
 .config(['$routeProvider', function($routeProvider) {
@@ -63,51 +60,6 @@ angular.module('myApp.notes', ['ngRoute', 'textAngular'])
   $scope.deleteNote = function(note) {
     NotesBackend.deleteNote(note, function() {
       $scope.clearNote();
-    });
-  };
-
-}])
-
-.service('NotesBackend', ['$http', function($http){
-
-  var notes = [];
-  var self = this;
-
-  this.getNotes = function() {
-    return notes;
-  };
-
-  this.fetchNotes = function() {
-    $http.get(notelyBasePath + 'notes.json?api_key=' + apiKey)
-    .success(function(notes_data) {
-      notes = notes_data;
-    });
-  };
-
-  this.postNote = function(noteData, callback) {
-    $http.post(notelyBasePath + 'notes', {
-      api_key: apiKey,
-      note: noteData
-    }).success(function(newNoteData) {
-      notes.push(newNoteData);
-      callback(newNoteData);
-    });
-  };
-
-  this.updateNote = function(note) {
-    $http.put(notelyBasePath + 'notes/' + note.id, {
-      api_key: apiKey,
-      note: note
-    }).success(function(response){
-      // TODO: replace note in notes variable instead of full refresh
-      self.fetchNotes();
-    });
-  };
-
-  this.deleteNote = function(note, callback) {
-    $http.delete(notelyBasePath + 'notes/' + note.id + '?api_key=' + apiKey).success(function(response) {
-      self.fetchNotes();
-      callback();
     });
   };
 
