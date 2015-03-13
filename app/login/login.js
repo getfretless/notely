@@ -14,7 +14,7 @@ angular.module('myApp.login', ['ngRoute'])
   $scope.user = {};
 
   $scope.submit = function() {
-    NotesBackend.fetchApiKey($scope.user, function(user) {
+    NotesBackend.fetchUser($scope.user, function(user) {
       $location.path('notes');
       $scope.user = user;
     });

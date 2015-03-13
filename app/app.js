@@ -27,7 +27,6 @@ service('NotesBackend', ['$http', '$cookies', function($http, $cookies){
 
   var notes = [];
   var notelyBasePath = 'https://elevennote-nov-2014.herokuapp.com/api/v1/';
-  var apiKey = $cookies.apiKey || '';
   var user = $cookies.user ? JSON.parse($cookies.user) : {};
   var self = this;
 
@@ -35,16 +34,12 @@ service('NotesBackend', ['$http', '$cookies', function($http, $cookies){
     return notes;
   };
 
-  this.getApiKey = function() {
-    return apiKey;
-  };
-
   this.getUser = function() {
     return user;
   };
 
   this.fetchNotes = function() {
-    $http.get(notelyBasePath + 'notes.json?api_key=' + apiKey)
+    $http.get(notelyBasePath + 'notes.json?api_key=' + user.api_key)
     .success(function(notes_data) {
       notes = notes_data;
     });
@@ -52,7 +47,7 @@ service('NotesBackend', ['$http', '$cookies', function($http, $cookies){
 
   this.postNote = function(noteData, callback) {
     $http.post(notelyBasePath + 'notes', {
-      api_key: apiKey,
+      api_key: user.api_key,
       note: noteData
     }).success(function(newNoteData) {
       notes.push(newNoteData);
@@ -62,7 +57,7 @@ service('NotesBackend', ['$http', '$cookies', function($http, $cookies){
 
   this.updateNote = function(note) {
     $http.put(notelyBasePath + 'notes/' + note.id, {
-      api_key: apiKey,
+      api_key: user.api_key,
       note: note
     }).success(function(response){
       // TODO: replace note in notes variable instead of full refresh
@@ -71,7 +66,7 @@ service('NotesBackend', ['$http', '$cookies', function($http, $cookies){
   };
 
   this.deleteNote = function(note, callback) {
-    $http.delete(notelyBasePath + 'notes/' + note.id + '?api_key=' + apiKey).success(function(response) {
+    $http.delete(notelyBasePath + 'notes/' + note.id + '?api_key=' + user.api_key).success(function(response) {
       self.fetchNotes();
       callback();
     });
@@ -79,21 +74,18 @@ service('NotesBackend', ['$http', '$cookies', function($http, $cookies){
 
   this.deleteCookie = function() {
     delete $cookies.user;
-    delete $cookies.apiKey;
     user = {};
-    apiKey = '';
     notes = [];
   };
 
-  this.fetchApiKey = function(user, callback) {
+  this.fetchUser = function(user, callback) {
     $http.post(notelyBasePath + 'session', {
       user: user
     }).success(function(userData) {
-      apiKey = userData.api_key;
-      $cookies.apiKey = apiKey;
-      $cookies.user = JSON.stringify(userData);
+      user = userData;
+      $cookies.user = JSON.stringify(user);
       self.fetchNotes();
-      callback(userData);
+      callback(user);
     });
   };
 
