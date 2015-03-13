@@ -85,8 +85,10 @@ service('NotesBackend', ['$http', '$cookies', function($http, $cookies){
       user: user
     }).success(function(userData) {
       user = userData;
-      $cookies.user = JSON.stringify(user);
-      self.fetchNotes();
+      if (userData.id) {
+        $cookies.user = JSON.stringify(user);
+        self.fetchNotes();
+      }
       callback(user);
     });
   };

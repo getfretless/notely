@@ -12,12 +12,19 @@ angular.module('myApp.login', ['ngRoute'])
 .controller('LoginController', ['$scope', '$location', '$window', 'NotesBackend', function($scope, $location, $window, NotesBackend) {
 
   $scope.user = {};
+  $scope.error = '';
 
   $scope.submit = function() {
     NotesBackend.fetchUser($scope.user, function(user) {
-      $location.path('notes');
-      $window.location.reload();
-      $scope.user = user;
+      if (user.id) {
+        $location.path('notes');
+        $window.location.reload();
+        $scope.user = user;
+      }
+      else {
+        $scope.error = user.error;
+        $scope.user.password = '';
+      }
     });
   };
 
