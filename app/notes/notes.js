@@ -60,6 +60,12 @@ angular.module('myApp.notes', ['ngRoute'])
     $scope.$broadcast('noteCleared');
   };
 
+  $scope.deleteNote = function(note) {
+    NotesBackend.deleteNote(note, function() {
+      $scope.clearNote();
+    });
+  };
+
 }])
 
 .service('NotesBackend', ['$http', function($http){
@@ -95,6 +101,13 @@ angular.module('myApp.notes', ['ngRoute'])
     }).success(function(response){
       // TODO: replace note in notes variable instead of full refresh
       self.fetchNotes();
+    });
+  };
+
+  this.deleteNote = function(note, callback) {
+    $http.delete(notelyBasePath + 'notes/' + note.id + '?api_key=' + apiKey).success(function(response) {
+      self.fetchNotes();
+      callback();
     });
   };
 

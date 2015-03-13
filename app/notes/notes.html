@@ -11,5 +11,8 @@
   </p>
   <div class="form-action">
     <input type="submit" name="action" value="{{ buttonText(note) }}" class="btn btn-default">
+    <a ng-click="deleteNote(note)" ng-show="note.id">
+      <i class="fa fa-trash-o"></i>
+    </a>
   </div>
 </form>
