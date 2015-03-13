@@ -9,7 +9,7 @@ angular.module('myApp.notes', ['ngRoute', 'textAngular'])
   });
 }])
 
-.controller('NotesController', ['$scope', 'NotesBackend', function($scope, NotesBackend) {
+.controller('NotesController', ['$scope', '$location', 'NotesBackend', function($scope, $location, NotesBackend) {
 
   NotesBackend.fetchNotes();
 
@@ -17,12 +17,21 @@ angular.module('myApp.notes', ['ngRoute', 'textAngular'])
     return NotesBackend.getNotes();
   };
 
+  $scope.user = function() {
+    return NotesBackend.getUser();
+  }
+
   $scope.hasNotes = function() {
     return $scope.notes().length > 0;
   };
 
   $scope.buttonText = function(note) {
     return (note && note.id) ? 'Update Note' : 'Create Note';
+  };
+
+  $scope.logout = function() {
+    NotesBackend.deleteCookie();
+    $location.path('login');
   };
 
   $scope.saveNote = function() {
