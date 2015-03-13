@@ -9,10 +9,14 @@ angular.module('myApp.login', ['ngRoute'])
   });
 }])
 
-.controller('LoginController', ['$scope', function($scope) {
+.controller('LoginController', ['$scope', 'NotesBackend', function($scope, NotesBackend) {
+
+  $scope.user = {};
 
   $scope.submit = function() {
-    console.log('hello');
+    NotesBackend.fetchApiKey($scope.user, function(user) {
+      $scope.user = user;
+    });
   };
 
 }]);

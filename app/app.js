@@ -1,7 +1,6 @@
 'use strict';
 
-var notelyBasePath = 'https://elevennote-nov-2014.herokuapp.com/api/v1/';
-var apiKey = '$2a$10$Z96eCeXE/kPt/l1Yuvg5xuJr1MArnxV33yJ2z0hjBcVZZCiJtHwZa';
+// var apiKey = '$2a$10$Z96eCeXE/kPt/l1Yuvg5xuJr1MArnxV33yJ2z0hjBcVZZCiJtHwZa';
 
 // Declare app level module which depends on views, and components
 angular.module('myApp', [
@@ -28,10 +27,16 @@ directive('focusOn', function(){
 service('NotesBackend', ['$http', function($http){
 
   var notes = [];
+  var notelyBasePath = 'https://elevennote-nov-2014.herokuapp.com/api/v1/';
+  var apiKey = '';
   var self = this;
 
   this.getNotes = function() {
     return notes;
+  };
+
+  this.getApiKey = function() {
+    return apiKey;
   };
 
   this.fetchNotes = function() {
@@ -65,6 +70,16 @@ service('NotesBackend', ['$http', function($http){
     $http.delete(notelyBasePath + 'notes/' + note.id + '?api_key=' + apiKey).success(function(response) {
       self.fetchNotes();
       callback();
+    });
+  };
+
+  this.fetchApiKey = function(user, callback) {
+    $http.post(notelyBasePath + 'session', {
+      user: user
+    }).success(function(userData) {
+      apiKey = userData.api_key;
+      self.fetchNotes();
+      callback(userData);
     });
   };
 
