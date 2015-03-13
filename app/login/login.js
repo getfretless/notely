@@ -9,12 +9,13 @@ angular.module('myApp.login', ['ngRoute'])
   });
 }])
 
-.controller('LoginController', ['$scope', 'NotesBackend', function($scope, NotesBackend) {
+.controller('LoginController', ['$scope', '$location', 'NotesBackend', function($scope, $location, NotesBackend) {
 
   $scope.user = {};
 
   $scope.submit = function() {
     NotesBackend.fetchApiKey($scope.user, function(user) {
+      $location.path('notes');
       $scope.user = user;
     });
   };
